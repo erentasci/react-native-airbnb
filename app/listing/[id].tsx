@@ -1,6 +1,7 @@
 import listingsData from "@/assets/data/airbnb-listings.json";
 import Colors from "@/constants/Colors";
 import { defaultStyles } from "@/constants/Styles";
+import { Listing } from "@/interfaces/listing";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams, useNavigation } from "expo-router";
 import React, { useLayoutEffect } from "react";
@@ -217,6 +218,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 10,
     fontFamily: "mon",
+    paddingHorizontal: 20,
   },
 });
 

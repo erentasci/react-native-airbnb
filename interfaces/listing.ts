@@ -1,4 +1,4 @@
-interface Listing {
+export interface Listing {
     id: string;
     listing_url: string;
     scrape_id: string;
@@ -90,12 +90,12 @@ interface Listing {
     features: string[];
   }
   
-  interface Geolocation {
+  export interface Geolocation {
     lon: number;
     lat: number;
   }
   
-  interface Pictureurl {
+  export interface Pictureurl {
     thumbnail: boolean;
     filename: string;
     format: string;

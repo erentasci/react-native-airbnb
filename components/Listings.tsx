@@ -1,5 +1,6 @@
 import Colors from "@/constants/Colors";
 import { defaultStyles } from "@/constants/Styles";
+import { Listing } from "@/interfaces/listing";
 import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import React, { useEffect, useState } from "react";
