@@ -1,7 +1,10 @@
+import Colors from "@/constants/Colors";
 import { defaultStyles } from "@/constants/Styles";
+import { Ionicons } from "@expo/vector-icons";
+import * as Location from "expo-location";
 import { useRouter } from "expo-router";
-import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import React, { memo, useEffect, useRef } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import MapView from "react-native-map-clustering";
 import { Marker } from "react-native-maps";
 
@@ -10,35 +13,45 @@ interface Props {
 }
 
 const INITIAL_REGION = {
-  latitude: 52.4,
-  longitude: 13.3,
-  latitudeDelta: 8.5,
-  longitudeDelta: 8.5,
+  latitude: 37.33,
+  longitude: -122,
+  latitudeDelta: 9,
+  longitudeDelta: 9,
 };
 
-const ListingsMap = ({ listings }: Props) => {
+const ListingsMap = memo(({ listings }: Props) => {
   const router = useRouter();
+  const mapRef = useRef<any>(null);
+
+  useEffect(() => {
+    onLocateMe();
+  }, []);
 
   const onMarkerSelected = (event: any) => {
-    console.log(event.properties.name);
     router.push(`/listing/${event.properties.id}`);
   };
 
   const onLocateMe = async () => {
-    // const { status } = await Location.requestForegroundPermissionsAsync();
-    // if (status !== 'granted') {
-    //   console.log('Permission to access location was denied');
-    //   return;
-    // }
-    // const location = await Location.getCurrentPositionAsync({});
-    // console.log(location);
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== "granted") {
+      return;
+    }
+
+    let location = await Location.getCurrentPositionAsync({});
+
+    const region = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+      latitudeDelta: 7,
+      longitudeDelta: 7,
+    };
+
+    mapRef.current?.animateToRegion(region);
   };
 
   const renderCluster = (cluster: any) => {
-    console.log(cluster);
-
     const { id, geometry, onPress, properties } = cluster;
-    console.log(properties);
+    console.log("render cluster");
 
     const points = properties.point_count;
     return (
@@ -68,6 +81,7 @@ const ListingsMap = ({ listings }: Props) => {
   return (
     <View style={defaultStyles.container}>
       <MapView
+        ref={mapRef}
         animationEnabled={false}
         style={StyleSheet.absoluteFillObject}
         initialRegion={INITIAL_REGION}
@@ -91,9 +105,12 @@ const ListingsMap = ({ listings }: Props) => {
           </Marker>
         ))}
       </MapView>
+      <TouchableOpacity style={styles.locateBtn} onPress={onLocateMe}>
+        <Ionicons name="navigate" size={24} color={Colors.dark} />
+      </TouchableOpacity>
     </View>
   );
-};
+});
 
 const styles = StyleSheet.create({
   container: {
@@ -117,6 +134,22 @@ const styles = StyleSheet.create({
   markerText: {
     fontSize: 14,
     fontFamily: "mon-sb",
+  },
+  locateBtn: {
+    position: "absolute",
+    top: 70,
+    right: 20,
+    backgroundColor: "#fff",
+    padding: 10,
+    borderRadius: 10,
+    elevation: 2,
+    shadowColor: "#000",
+    shadowOpacity: 0.1,
+    shadowRadius: 6,
+    shadowOffset: {
+      width: 1,
+      height: 10,
+    },
   },
 });
 

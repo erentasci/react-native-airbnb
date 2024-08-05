@@ -56,7 +56,7 @@ const ExploreHeader = ({ onCategoryChanged }: Props) => {
     const selected = itemsRef.current[index];
     setActiveIndex(index);
     selected?.measure((x) => {
-      scrollRef.current?.scrollTo({ x: x - 100, y: 0, animated: true });
+      scrollRef.current?.scrollTo({ x: x - 16, y: 0, animated: true });
     });
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
     onCategoryChanged(categories[index].name);
@@ -90,7 +90,7 @@ const ExploreHeader = ({ onCategoryChanged }: Props) => {
           showsHorizontalScrollIndicator={false}
           contentContainerStyle={{
             alignItems: "center",
-            gap: 30,
+            gap: 20,
             paddingHorizontal: 16,
           }}
         >
@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
     gap: 10,
     padding: 14,
     alignItems: "center",
-    width: 250,
+    width: 280,
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: "#c2c2c2",
     borderRadius: 30,
