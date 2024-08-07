@@ -1,15 +1,14 @@
-import { ClerkProvider, useAuth } from "@clerk/clerk-expo";
-import { Ionicons } from "@expo/vector-icons";
-import { useFonts } from "expo-font";
-import { Stack, useRouter } from "expo-router";
-import * as SecureStore from "expo-secure-store";
-import * as SplashScreen from "expo-splash-screen";
-import { useEffect } from "react";
-import { TouchableOpacity } from "react-native";
-import "react-native-reanimated";
+import { useFonts } from 'expo-font';
+import { SplashScreen, Stack, useRouter } from 'expo-router';
+import { useEffect } from 'react';
+import { ClerkProvider, useAuth } from '@clerk/clerk-expo';
+import * as SecureStore from 'expo-secure-store';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { Ionicons } from '@expo/vector-icons';
+import Colors from '@/constants/Colors';
 
 const CLERK_PUBLISHABLE_KEY = process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY;
-
+// Cache the Clerk JWT
 const tokenCache = {
   async getToken(key: string) {
     try {
@@ -27,21 +26,17 @@ const tokenCache = {
   },
 };
 
-export { ErrorBoundary } from "expo-router";
-
-export const unstable_settings = {
-  initialRouteName: "(tabs)",
-};
-
+// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    mon: require("../assets/fonts/Montserrat-Regular.ttf"),
-    "mon-sb": require("../assets/fonts/Montserrat-SemiBold.ttf"),
-    "mon-b": require("../assets/fonts/Montserrat-Bold.ttf"),
+    mon: require('../assets/fonts/Montserrat-Regular.ttf'),
+    'mon-sb': require('../assets/fonts/Montserrat-SemiBold.ttf'),
+    'mon-b': require('../assets/fonts/Montserrat-Bold.ttf'),
   });
 
+  // Expo Router uses Error Boundaries to catch errors in the navigation tree.
   useEffect(() => {
     if (error) throw error;
   }, [error]);
@@ -57,10 +52,7 @@ export default function RootLayout() {
   }
 
   return (
-    <ClerkProvider
-      publishableKey={CLERK_PUBLISHABLE_KEY!}
-      tokenCache={tokenCache}
-    >
+    <ClerkProvider publishableKey={CLERK_PUBLISHABLE_KEY!} tokenCache={tokenCache}>
       <RootLayoutNav />
     </ClerkProvider>
   );
@@ -71,23 +63,22 @@ function RootLayoutNav() {
   const router = useRouter();
 
   useEffect(() => {
-    console.log("auth ready");
+    console.log('auth ready');
     if (isLoaded && !isSignedIn) {
-      router.push("/(modals)/login");
+      router.push('/(modals)/login');
     }
   }, [isLoaded]);
 
   return (
     <Stack>
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen
         name="(modals)/login"
         options={{
-          title: "Log in or sign up",
+          presentation: 'modal',
+          title: 'Log in or sign up',
           headerTitleStyle: {
-            fontFamily: "mon-sb",
+            fontFamily: 'mon-sb',
           },
-          presentation: "modal",
           headerLeft: () => (
             <TouchableOpacity onPress={() => router.back()}>
               <Ionicons name="close-outline" size={28} />
@@ -95,17 +86,24 @@ function RootLayoutNav() {
           ),
         }}
       />
-      <Stack.Screen
-        name="listing/[id]"
-        options={{ headerTitle: "", headerTransparent: true }}
-      />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="listing/[id]" options={{ headerTitle: '' }} />
       <Stack.Screen
         name="(modals)/booking"
         options={{
-          presentation: "transparentModal",
-          animation: "fade",
+          presentation: 'transparentModal',
+          animation: 'fade',
+          title: '',
+          headerTransparent: true,
           headerLeft: () => (
-            <TouchableOpacity onPress={() => router.back()}>
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={{
+                backgroundColor: '#fff',
+                borderColor: Colors.grey,
+                borderRadius: 20,
+                borderWidth: 1,
+              }}>
               <Ionicons name="close-outline" size={28} />
             </TouchableOpacity>
           ),

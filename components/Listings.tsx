@@ -1,19 +1,10 @@
-import { defaultStyles } from "@/constants/Styles";
-import { Ionicons } from "@expo/vector-icons";
-import {
-  BottomSheetFlatList,
-  BottomSheetFlatListMethods,
-} from "@gorhom/bottom-sheet";
-import { Link } from "expo-router";
-import { useEffect, useRef, useState } from "react";
-import {
-  ListRenderItem,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from "react-native";
-import Animated, { FadeInRight, FadeOutLeft } from "react-native-reanimated";
+import { View, Text, StyleSheet, ListRenderItem, TouchableOpacity } from 'react-native';
+import { defaultStyles } from '@/constants/Styles';
+import { Ionicons } from '@expo/vector-icons';
+import { Link } from 'expo-router';
+import Animated, { FadeInRight, FadeOutLeft } from 'react-native-reanimated';
+import { useEffect, useRef, useState } from 'react';
+import { BottomSheetFlatList, BottomSheetFlatListMethods } from '@gorhom/bottom-sheet';
 
 interface Props {
   listings: any[];
@@ -36,7 +27,7 @@ const Listings = ({ listings: items, refresh, category }: Props) => {
   };
 
   useEffect(() => {
-    console.log("REFRESH DATA");
+    console.log('REFRESH DATA');
 
     setLoading(true);
 
@@ -48,32 +39,19 @@ const Listings = ({ listings: items, refresh, category }: Props) => {
   const renderRow: ListRenderItem<any> = ({ item }) => (
     <Link href={`/listing/${item.id}`} asChild>
       <TouchableOpacity>
-        <Animated.View
-          style={styles.listing}
-          entering={FadeInRight}
-          exiting={FadeOutLeft}
-        >
-          <Animated.Image
-            source={{ uri: item.medium_url }}
-            style={styles.image}
-          />
-          <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
-          >
-            <Text style={{ fontSize: 16, fontFamily: "mon-sb" }}>
-              {item.name}
-            </Text>
-            <View style={{ flexDirection: "row", gap: 4 }}>
+        <Animated.View style={styles.listing} entering={FadeInRight} exiting={FadeOutLeft}>
+          <Animated.Image source={{ uri: item.medium_url }} style={styles.image} />
+          <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+            <Text style={{ fontSize: 16, fontFamily: 'mon-sb' }}>{item.name}</Text>
+            <View style={{ flexDirection: 'row', gap: 4 }}>
               <Ionicons name="star" size={16} />
-              <Text style={{ fontFamily: "mon-sb" }}>
-                {item.review_scores_rating / 20}
-              </Text>
+              <Text style={{ fontFamily: 'mon-sb' }}>{item.review_scores_rating / 20}</Text>
             </View>
           </View>
-          <Text style={{ fontFamily: "mon" }}>{item.room_type}</Text>
-          <View style={{ flexDirection: "row", gap: 4 }}>
-            <Text style={{ fontFamily: "mon-sb" }}>€ {item.price}</Text>
-            <Text style={{ fontFamily: "mon" }}>night</Text>
+          <Text style={{ fontFamily: 'mon' }}>{item.room_type}</Text>
+          <View style={{ flexDirection: 'row', gap: 4 }}>
+            <Text style={{ fontFamily: 'mon-sb' }}>€ {item.price}</Text>
+            <Text style={{ fontFamily: 'mon' }}>night</Text>
           </View>
         </Animated.View>
       </TouchableOpacity>
@@ -86,9 +64,7 @@ const Listings = ({ listings: items, refresh, category }: Props) => {
         renderItem={renderRow}
         data={loading ? [] : items}
         ref={listRef}
-        ListHeaderComponent={
-          <Text style={styles.info}>{items.length} homes</Text>
-        }
+        ListHeaderComponent={<Text style={styles.info}>{items.length} homes</Text>}
       />
     </View>
   );
@@ -101,13 +77,13 @@ const styles = StyleSheet.create({
     marginVertical: 16,
   },
   image: {
-    width: "100%",
+    width: '100%',
     height: 300,
     borderRadius: 10,
   },
   info: {
-    textAlign: "center",
-    fontFamily: "mon-sb",
+    textAlign: 'center',
+    fontFamily: 'mon-sb',
     fontSize: 16,
     marginTop: 4,
   },
